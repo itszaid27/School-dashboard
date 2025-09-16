@@ -12,12 +12,13 @@ const handleWebhook = async (req, res) => {
       return res.status(400).json({ message: 'Invalid webhook payload' });
     }
 
-    const order = await Order.findById(orderInfo.order_id);
+   
+    const collectId = orderInfo.collect_request_id || orderInfo.order_id;
 
+    const order = await Order.findOne({ _id: collectId });
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
-
 
     await OrderStatus.findOneAndUpdate(
       { collect_id: order._id },
@@ -25,12 +26,12 @@ const handleWebhook = async (req, res) => {
         order_amount: orderInfo.order_amount,
         transaction_amount: orderInfo.transaction_amount,
         payment_mode: orderInfo.payment_mode,
-        payment_details: orderInfo.payemnt_details,
+        payment_details: orderInfo.payment_details,
         bank_reference: orderInfo.bank_reference,
-        payment_message: orderInfo.Payment_message,
-        status: orderInfo.status,
+        payment_message: orderInfo.payment_message,
+        status: orderInfo.status, 
         error_message: orderInfo.error_message,
-        payment_time: orderInfo.payment_time,
+        payment_time: orderInfo.payment_time ? new Date(orderInfo.payment_time) : new Date(),
       },
       { upsert: true, new: true }
     );

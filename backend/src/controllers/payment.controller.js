@@ -6,6 +6,8 @@ const PG_KEY = process.env.PG_KEY;
 const API_KEY = process.env.API_KEY;
 const SCHOOL_ID = process.env.SCHOOL_ID;
 
+
+
 const createPayment = async (req, res) => {
   try {
     const { trustee_id, student_info, amount, callback_url } = req.body;
@@ -68,4 +70,6 @@ const createPayment = async (req, res) => {
   }
 };
 
-module.exports = { createPayment };
+
+
+module.exports = { createPayment};
